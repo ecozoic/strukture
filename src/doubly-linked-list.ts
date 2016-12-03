@@ -10,16 +10,31 @@ export class DoublyLinkedList<T> {
     }
 
     public get empty(): boolean {
-        return this._count === 0;
+        return this.count === 0;
+    }
+
+    public get first(): T {
+        if (this.empty) {
+            return null;
+        }
+
+        return this._head.value;
+    }
+
+    public get last(): T {
+        if (this.empty) {
+            return null;
+        }
+
+        return this._tail.value;
     }
 
     // O(1)
     public addFirst(value: T): void {
-        this.addFirstNode(new DoublyLinkedNode(value));
+        this.addFirstNode(new DoublyLinkedNode<T>(value));
     }
 
-    // O(1)
-    public addFirstNode(node: DoublyLinkedNode<T>): void {
+    private addFirstNode(node: DoublyLinkedNode<T>): void {
         const temp = this._head;
         this._head = node;
         this._head.next = temp;
@@ -35,11 +50,10 @@ export class DoublyLinkedList<T> {
 
     // O(1)
     public addLast(value: T): void {
-        this.addLastNode(new DoublyLinkedNode(value));
+        this.addLastNode(new DoublyLinkedNode<T>(value));
     }
 
-    // O(1)
-    public addLastNode(node: DoublyLinkedNode<T>): void {
+    private addLastNode(node: DoublyLinkedNode<T>): void {
         if (this.empty) {
             this._head = node;
         } else {

@@ -12,16 +12,31 @@ export class LinkedList<T> {
     }
 
     public get empty(): boolean {
-        return this._count === 0;
+        return this.count === 0;
+    }
+
+    public get first(): T {
+        if (this.empty) {
+            return null;
+        }
+
+        return this._head.value;
+    }
+
+    public get last(): T {
+        if (this.empty) {
+            return null;
+        }
+        
+        return this._tail.value;
     }
 
     // O(1)
     public addFirst(value: T): void {
-        this.addFirstNode(new Node(value));
+        this.addFirstNode(new Node<T>(value));
     }
 
-    // O(1)
-    public addFirstNode(node: Node<T>): void {
+    private addFirstNode(node: Node<T>): void {
         const temp = this._head;
         this._head = node;
         this._head.next = temp;
@@ -34,11 +49,10 @@ export class LinkedList<T> {
 
     // O(1)
     public addLast(value: T): void {
-        this.addLastNode(new Node(value));
+        this.addLastNode(new Node<T>(value));
     }
 
-    // O(1)
-    public addLastNode(node: Node<T>): void {
+    private addLastNode(node: Node<T>): void {
         if (this.empty) {
             this._head = node;
         } else {
