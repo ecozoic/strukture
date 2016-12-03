@@ -1,6 +1,7 @@
 import { BinaryTreeNode } from './node';
+import { Stack } from './stack';
 
-export class BinarySearchTree<T> {
+export class BinaryTree<T> {
     private _root: BinaryTreeNode<T> = null;
     private _count: number = 0;
 
@@ -132,5 +133,80 @@ export class BinarySearchTree<T> {
         }
 
         return true;
+    }
+
+    public clear(): void {
+        this._root = null;
+        this._count = 0;
+    }
+
+    // traversals
+    // pre-order (node -> left -> right)
+    // in-order (left -> node -> right)
+    // post-order (left -> right -> node)
+    public* preOrder() {
+        yield* this.preOrderTraversal(this._root);
+    }
+
+    private* preOrderTraversal(node: BinaryTreeNode<T>) {
+        if (node !== null) {
+            yield node.value;
+            yield* this.preOrderTraversal(node.left);
+            yield* this.preOrderTraversal(node.right);
+        }
+    }
+
+    public* inOrder() {
+        yield* this.inOrderTraversal(this._root);
+    }
+
+    private* inOrderTraversal(node: BinaryTreeNode<T>) {
+        if (node !== null) {
+            yield* this.inOrderTraversal(node.left);
+            yield node.value;
+            yield* this.inOrderTraversal(node.right);
+        }
+    }
+
+    public* postOrder() {
+        yield* this.postOrderTraversal(this._root);
+    }
+
+    private* postOrderTraversal(node: BinaryTreeNode<T>) {
+        if (node !== null) {
+            yield* this.postOrderTraversal(node.left);
+            yield* this.postOrderTraversal(node.right);
+            yield node.value;
+        }
+    }
+
+    // non-recursive in-order
+    *[Symbol.iterator]() {
+        if (!this.empty) {
+            const stack = new Stack<BinaryTreeNode<T>>();
+            let current = this._root;
+            let goLeftNext = false;
+
+            stack.push(current);
+
+            while (stack.count > 0) {
+                if (goLeftNext) {
+                    while (current.left !== null) {
+                        stack.push(current);
+                        current = current.left;
+                    }
+                }
+
+                yield current.value;
+
+                if (current.right !== null) {
+                    current = current.right;
+                    goLeftNext = true;
+                } else {
+                    current = stack.pop();
+                    goLeftNext = false;
+                }
+            }
+        }
     }
 }
