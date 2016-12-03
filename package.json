@@ -1,0 +1,8 @@
+{
+  "name": "strukture",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/ecozoic/strukture.git",
+  "author": "ecozoic <johnnn.mitchell@gmail.com>",
+  "license": "MIT"
+}
