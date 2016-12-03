@@ -1,4 +1,4 @@
-export class ArrayStack<T> {
+export class ArrayQueue<T> {
     private _items: T[] = [];
 
     public get count(): number {
@@ -9,16 +9,16 @@ export class ArrayStack<T> {
         return this.count === 0;
     }
 
-    public push(item: T): void {
+    public enqueue(item: T): void {
         this._items.push(item);
     }
 
-    public pop(): T {
+    public dequeue(): T {
         if (this.empty) {
             return null;
         }
 
-        return this._items.splice(-1)[0];
+        return this._items.splice(0, 1)[0];
     }
 
     public peek(): T {
@@ -26,7 +26,7 @@ export class ArrayStack<T> {
             return null;
         }
 
-        return this._items[this.count - 1];
+        return this._items[0];
     }
 
     public clear(): void {
