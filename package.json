@@ -1,15 +1,22 @@
 {
   "name": "strukture",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/ecozoic/strukture.git",
   "author": "ecozoic <johnnn.mitchell@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "ts-node src/index.ts"
+    "pretest": "rm -rf coverage",
+    "test": "jest"
   },
   "dependencies": {
-    "ts-node": "1.7.0",
-    "typescript": "2.1.4"
+    "@types/jest": "^26.0.3",
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@typescript-eslint/parser": "^3.5.0",
+    "eslint": "^7.3.1",
+    "jest": "^26.1.0",
+    "prettier": "^2.0.5",
+    "ts-jest": "^26.1.1",
+    "typescript": "^3.9.6"
   }
 }
