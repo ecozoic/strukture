@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "pretest": "rm -rf coverage",
-    "test": "jest",
+    "test": "jest --coverage",
     "tdd": "jest --watch"
   },
   "dependencies": {

@@ -18,7 +18,7 @@ const coverageThresholds = {
 
 module.exports = {
   preset: 'ts-jest',
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: ['src/**/*.ts'],
   coverageDirectory: '<rootDir>/coverage',
   coverageThreshold: coverageThresholds.none,
