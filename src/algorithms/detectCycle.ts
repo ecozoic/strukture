@@ -3,7 +3,7 @@ import LinkedNode from '../structures/LinkedNode';
 
 /**
  * Determines if a linked list is cyclic or acyclic
- * Implemented using Hashtable
+ * Implemented using hash table
  * Time Complexity - O(n)
  * Space Complexity - O(n)
  * @param head Head of linked list to check for cycles
@@ -16,7 +16,7 @@ export default function detectCycle<T>(
     return null;
   }
 
-  // use a hashtable to keep track of visited nodes
+  // use a hash table to keep track of visited nodes
   // if you visit a node that already exists in the set
   // that means it was start of cycle
   const visited = new Set<LinkedNode<T>>();
