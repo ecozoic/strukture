@@ -125,5 +125,15 @@ describe('StackQueue2', () => {
       expect(queue.peek()).toEqual(1);
       expect(queue.isEmpty()).toEqual(false);
     });
+
+    it('handles peeks after a dequeue', () => {
+      queue.enqueue(1);
+      queue.enqueue(2);
+      queue.enqueue(3);
+
+      queue.dequeue();
+
+      expect(queue.peek()).toEqual(2);
+    });
   });
 });
