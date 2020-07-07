@@ -1,4 +1,5 @@
 import LinkedList from './LinkedList';
+import LinkedNode from './LinkedNode';
 
 /**
  * @class A hash table with seperate chaining collision
@@ -99,5 +100,8 @@ export default class HashTable<T> {
 
     // map hash code to an index that will fit in our array of buckets
     return hashCode % this.buckets.length;
+
+    // could also use % for integers, preferabbly with a prime # as base to minimize collisions
+    // i.e., hash of 100 = 100 % 2069
   }
 }

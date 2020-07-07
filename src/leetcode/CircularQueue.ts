@@ -1,6 +1,4 @@
 // https://leetcode.com/problems/design-circular-queue/
-// ctor(k = size), Front, Rear, enQueue(val), deQueue(val), isEmpty(), isFull()
-
 /** @class A fixed-size circular queue implemented with an array */
 export default class CircularQueue<T> {
   /**
