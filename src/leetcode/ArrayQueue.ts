@@ -1,32 +1,25 @@
 /** @class A fixed-size queue implemented with an array */
 export default class ArrayQueue<T> {
   /**
-   * Size of the queue
-   * @member
-   * @private
-   */
-  private _size: number;
-
-  /**
-   * Index of rear of queue
-   * @member
-   * @private
-   */
-  private _rear: number;
-
-  /**
    * Index of front of queue
    * @member
    * @private
    */
-  private _front: number;
+  private head: number;
+
+  /**
+   * Number of items currently in queue
+   * @member
+   * @private
+   */
+  private count: number;
 
   /**
    * Queue array
    * @member
    * @private
    */
-  private _queue: Array<T | null>;
+  private queue: Array<T | null>;
 
   /**
    * Creates a new queue of the specified size
@@ -34,9 +27,9 @@ export default class ArrayQueue<T> {
    * @constructor
    */
   constructor(size = 5) {
-    this._size = size;
-    this._rear = this._front = -1;
-    this._queue = Array(size).fill(null);
+    this.head = 0;
+    this.count = 0;
+    this.queue = Array(size).fill(null);
   }
 
   /**
@@ -44,53 +37,41 @@ export default class ArrayQueue<T> {
    * @return Size of queue
    */
   get size(): number {
-    return this._size;
-  }
-
-  /**
-   * Returns next item in the queue without dequeueing
-   * @return Next value or null if queue is empty
-   */
-  peek(): T | null {
-    if (this.isEmpty()) {
-      return null;
-    }
-
-    return this._queue[this._front];
+    return this.queue.length;
   }
 
   /**
    * Adds item to queue if there is enough space
+   * @return true if add was successful, false otherwise
    */
-  enqueue(value: T): void {
+  enQueue(value: T): boolean {
     if (this.isFull()) {
-      throw new Error('Max capacity reached');
-    } else if (this.isEmpty()) {
-      this._front = 0;
+      return false;
     }
 
-    this._queue[++this._rear] = value;
+    this.queue[this.head + this.count] = value;
+    this.count++;
+
+    return true;
   }
 
   /**
    * Removes next item in the queue
-   * @return Next value or null if queue is empty
+   * @return true if removal was successful, false otherwise
    */
-  dequeue(): T | null {
+  deQueue(): boolean {
     if (this.isEmpty()) {
-      return null;
-    } else {
-      const value = this._queue[this._front];
-
-      if (this._front >= this._rear) {
-        this._front = -1;
-        this._rear = -1;
-      } else {
-        this._front++;
-      }
-
-      return value;
+      return false;
     }
+
+    this.head = this.head + 1;
+    this.count--;
+
+    if (this.count === 0) {
+      this.head = 0;
+    }
+
+    return true;
   }
 
   /**
@@ -98,7 +79,7 @@ export default class ArrayQueue<T> {
    * @return true if queue is empty, false otherwise
    */
   isEmpty(): boolean {
-    return this._front === -1;
+    return this.count === 0;
   }
 
   /**
@@ -106,6 +87,6 @@ export default class ArrayQueue<T> {
    * @return true if queue is full, false otherwise
    */
   isFull(): boolean {
-    return this._rear === this._size - 1;
+    return this.head + this.count === this.size;
   }
 }

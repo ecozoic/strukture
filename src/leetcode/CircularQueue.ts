@@ -4,32 +4,25 @@
 /** @class A fixed-size circular queue implemented with an array */
 export default class CircularQueue<T> {
   /**
-   * Size of the queue
-   * @member
-   * @private
-   */
-  private _size: number;
-
-  /**
-   * Index of rear of queue
-   * @member
-   * @private
-   */
-  private _rear: number;
-
-  /**
    * Index of front of queue
    * @member
    * @private
    */
-  private _front: number;
+  private head: number;
+
+  /**
+   * Number of items currently in queue
+   * @member
+   * @private
+   */
+  private count: number;
 
   /**
    * Queue array
    * @member
    * @private
    */
-  private _queue: Array<T | null>;
+  private queue: Array<T | null>;
 
   /**
    * Creates a new queue of the specified size
@@ -37,9 +30,9 @@ export default class CircularQueue<T> {
    * @constructor
    */
   constructor(size = 5) {
-    this._size = size;
-    this._rear = this._front = -1;
-    this._queue = Array(size).fill(null);
+    this.head = 0;
+    this.count = 0;
+    this.queue = Array(size).fill(null);
   }
 
   /**
@@ -47,56 +40,37 @@ export default class CircularQueue<T> {
    * @return Size of queue
    */
   get size(): number {
-    return this._size;
+    return this.queue.length;
   }
 
   /**
-   * Returns next item in the queue without dequeueing
-   * @return Next value or null if queue is empty
+   * Adds item to queue
+   * @return true if add was successful, false otherwise
    */
-  peek(): T | null {
-    if (this.isEmpty()) {
-      return null;
-    }
-
-    return this._queue[this._front];
-  }
-
-  /**
-   * Adds item to queue if there is enough space
-   */
-  enqueue(value: T): void {
+  enQueue(value: T): boolean {
     if (this.isFull()) {
-      throw new Error('Max capacity reached');
-    } else if (this.isEmpty()) {
-      this._front = 0;
+      return false;
     }
 
-    // circular increment
-    this._rear = (this._rear + 1) % this._size;
-    this._queue[this._rear] = value;
+    this.queue[(this.head + this.count) % this.size] = value;
+    this.count++;
+
+    return true;
   }
 
   /**
-   * Removes next item in the queue
-   * @return Next value or null if queue is empty
+   * Removes item from the queue
+   * @return True if removal was successful, false otherwise
    */
-  dequeue(): T | null {
+  deQueue(): boolean {
     if (this.isEmpty()) {
-      return null;
-    } else {
-      const value = this._queue[this._front];
-
-      if (this._front >= this._rear) {
-        this._front = -1;
-        this._rear = -1;
-      } else {
-        // circular increment
-        this._front = (this._front + 1) % this._size;
-      }
-
-      return value;
+      return false;
     }
+
+    this.head = (this.head + 1) % this.size;
+    this.count--;
+
+    return true;
   }
 
   /**
@@ -104,7 +78,7 @@ export default class CircularQueue<T> {
    * @return true if queue is empty, false otherwise
    */
   isEmpty(): boolean {
-    return this._front === -1;
+    return this.count === 0;
   }
 
   /**
@@ -112,12 +86,6 @@ export default class CircularQueue<T> {
    * @return true if queue is full, false otherwise
    */
   isFull(): boolean {
-    if (this._front === 0 && this._rear === this._size - 1) {
-      return true;
-    } else if (this._front == this._rear + 1) {
-      return true;
-    }
-
-    return false;
+    return this.count === this.size;
   }
 }

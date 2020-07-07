@@ -13,7 +13,7 @@ describe('ArrayQueue', () => {
     });
 
     it('returns false for non-empty queues', () => {
-      queue.enqueue(1);
+      queue.enQueue(1);
 
       expect(queue.isEmpty()).toEqual(false);
     });
@@ -21,109 +21,86 @@ describe('ArrayQueue', () => {
 
   describe('isFull()', () => {
     it('returns true for full queues', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
-      queue.enqueue(4);
-      queue.enqueue(5);
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
+      queue.enQueue(4);
+      queue.enQueue(5);
 
       expect(queue.isFull()).toEqual(true);
     });
 
     it('returns false for non-full queues', () => {
-      queue.enqueue(1);
+      queue.enQueue(1);
 
       expect(queue.isFull()).toEqual(false);
     });
   });
 
-  describe('enqueue()', () => {
+  describe('enQueue()', () => {
     it('adds item to the queue', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
 
       expect(queue.isEmpty()).toEqual(false);
     });
 
-    it('throws error if queue is already at max size', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
-      queue.enqueue(4);
-      queue.enqueue(5);
+    it('returns false if queue is already at max size', () => {
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
+      queue.enQueue(4);
+      queue.enQueue(5);
 
-      expect(() => {
-        queue.enqueue(6);
-      }).toThrow();
+      expect(queue.enQueue(6)).toEqual(false);
     });
 
-    it('throws error after enqueue/dequeues w/o full reset', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
+    it('returns false after enQueue/deQueues w/o full reset', () => {
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
 
-      queue.dequeue();
+      queue.deQueue();
 
-      queue.enqueue(4);
-      queue.enqueue(5);
+      queue.enQueue(4);
+      queue.enQueue(5);
 
-      queue.dequeue();
+      queue.deQueue();
 
-      expect(() => {
-        queue.enqueue(6);
-      }).toThrow();
+      expect(queue.enQueue(6)).toEqual(false);
     });
 
-    it('does not throw error after enqueue/dequeues w/ full reset', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
+    it('returns true after enQueue/deQueues w/ full reset', () => {
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
 
-      queue.dequeue();
-      queue.dequeue();
-      queue.dequeue();
+      queue.deQueue();
+      queue.deQueue();
+      queue.deQueue();
 
-      queue.enqueue(4);
-      queue.enqueue(5);
+      queue.enQueue(4);
+      queue.enQueue(5);
 
-      expect(() => {
-        queue.enqueue(6);
-      }).not.toThrow();
+      expect(queue.enQueue(6)).toEqual(true);
     });
   });
 
-  describe('dequeue()', () => {
-    it('returns null for empty queue', () => {
-      expect(queue.dequeue()).toEqual(null);
+  describe('deQueue()', () => {
+    it('returns false for empty queue', () => {
+      expect(queue.deQueue()).toEqual(false);
     });
 
-    it('returns next item from the queue', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
+    it('returns true for next item from the queue', () => {
+      queue.enQueue(1);
+      queue.enQueue(2);
+      queue.enQueue(3);
 
-      expect(queue.dequeue()).toEqual(1);
-      expect(queue.dequeue()).toEqual(2);
-      expect(queue.dequeue()).toEqual(3);
-      expect(queue.dequeue()).toEqual(null);
-    });
-  });
-
-  describe('peek()', () => {
-    it('returns null for empty queue', () => {
-      expect(queue.peek()).toEqual(null);
-    });
-
-    it('returns next item from the queue without dequeueing it', () => {
-      queue.enqueue(1);
-      queue.enqueue(2);
-      queue.enqueue(3);
-
-      expect(queue.peek()).toEqual(1);
-      expect(queue.peek()).toEqual(1);
-      expect(queue.peek()).toEqual(1);
-      expect(queue.isEmpty()).toEqual(false);
+      expect(queue.deQueue()).toEqual(true);
+      expect(queue.deQueue()).toEqual(true);
+      expect(queue.deQueue()).toEqual(true);
+      expect(queue.deQueue()).toEqual(false);
     });
   });
 

@@ -90,7 +90,7 @@ describe('getIntersectionNode3', () => {
     expect(getIntersectionNode3(listA.head, listB.head)).toEqual(null);
   });
 
-  it.skip('returns null for lists that do not intersect', () => {
+  it('returns null for lists that do not intersect', () => {
     const listA = new LinkedList<number>();
     listA.append(1).append(2).append(3);
 
