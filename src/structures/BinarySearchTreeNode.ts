@@ -1,6 +1,20 @@
 /** @class Node in a BST */
 export default class BinarySearchTreeNode<T> {
   /**
+   * Copy parameters from source node onto target node
+   * @param sourceNode Source
+   * @param targetNode Target
+   */
+  static copyNode(
+    sourceNode: BinarySearchTreeNode<unknown>,
+    targetNode: BinarySearchTreeNode<unknown>
+  ): void {
+    targetNode.setData(sourceNode.data);
+    targetNode.setValue(sourceNode.value);
+    targetNode.setLeft(sourceNode.left);
+    targetNode.setRight(sourceNode.right);
+  }
+  /**
    * Value of the node used for comparisons
    * @member
    */
@@ -67,14 +81,12 @@ export default class BinarySearchTreeNode<T> {
    * @return Inserted node
    */
   insert(value: number, data: T): BinarySearchTreeNode<T> {
-    // what is this for?
     if (this.value === null) {
       this.value = value;
       this.data = data;
 
       return this;
     }
-    // end what is this for?
 
     if (value < this.value) {
       if (this.left !== null) {
@@ -122,12 +134,38 @@ export default class BinarySearchTreeNode<T> {
         parent.removeChild(nodeToRemove);
       } else {
         // node has no parent, erase current node value
-        nodeToRemove.setValue(undefined);
+        // TODO: data?
+        nodeToRemove.setValue(null as any);
+        nodeToRemove.setData(null as any);
       }
     } else if (nodeToRemove.left !== null && nodeToRemove.right !== null) {
       // node has two children
+      // find next biggest value (min. value in right branch)
+      // replace current node value with that node value
+      const nextBiggerNode = nodeToRemove.right.findMin();
+      if (nextBiggerNode !== nodeToRemove.right) {
+        this.remove(nextBiggerNode.value);
+        // TODO: data?
+        nodeToRemove.setValue(nextBiggerNode.value);
+        nodeToRemove.setData(nextBiggerNode.data);
+      } else {
+        // in case if next right value is next bigger value and it does not have left child
+        // then replace node that is going to be deleted with right node
+        // TODO: data?
+        nodeToRemove.setValue(nodeToRemove.right.value);
+        nodeToRemove.setData(nodeToRemove.right.data);
+        nodeToRemove.setRight(nodeToRemove.right.right);
+      }
     } else {
       // node has one child
+      // make this child direct child of current node's parent
+      const childNode = nodeToRemove.left || nodeToRemove.right;
+
+      if (parent) {
+        parent.replaceChild(nodeToRemove, childNode);
+      } else if (childNode !== null) {
+        BinarySearchTreeNode.copyNode(childNode, nodeToRemove);
+      }
     }
 
     // clear parent of removed node
@@ -141,7 +179,7 @@ export default class BinarySearchTreeNode<T> {
    * @param node Node to set as left child
    * @return this
    */
-  private setLeft(node: BinarySearchTreeNode<T>): this {
+  setLeft(node: BinarySearchTreeNode<T> | null): this {
     // reset parent for left node since it is going to be detached
     if (this.left !== null) {
       this.left.parent = null;
@@ -163,7 +201,7 @@ export default class BinarySearchTreeNode<T> {
    * @param node Node to set as right child
    * @return this
    */
-  private setRight(node: BinarySearchTreeNode<T>): this {
+  setRight(node: BinarySearchTreeNode<T> | null): this {
     // reset parent for right node since it is going to be detached
     if (this.right !== null) {
       this.right.parent = null;
@@ -178,5 +216,137 @@ export default class BinarySearchTreeNode<T> {
     }
 
     return this;
+  }
+
+  /**
+   * Sets data for current node
+   * @param data Data to set
+   * @return this
+   */
+  setData(data: T): this {
+    this.data = data;
+
+    return this;
+  }
+
+  /**
+   * Sets value for current node
+   * @param value Value to set
+   * @return this
+   */
+  setValue(value: number): this {
+    this.value = value;
+
+    return this;
+  }
+
+  /**
+   * Traverses the BST in-order (left, root, right)
+   * @return Generator of values
+   */
+  *traverseInOrder(): Generator<number> {
+    if (this.left !== null) {
+      yield* this.left.traverseInOrder();
+    }
+
+    yield this.value;
+
+    if (this.right !== null) {
+      yield* this.right.traverseInOrder();
+    }
+  }
+
+  /**
+   * Check if BST contains a certain value
+   * @param value Value to search for
+   * @return true if value found, false otherwise
+   */
+  contains(value: number): boolean {
+    return this.find(value) !== null;
+  }
+
+  /**
+   * Attempt to remove a direct child node
+   * @param nodeToRemove Child to remove
+   * @return true if removal was successful, false otherwise
+   */
+  removeChild(nodeToRemove: BinarySearchTreeNode<T>): boolean {
+    if (this.left !== null && this.left === nodeToRemove) {
+      this.left = null;
+      nodeToRemove.parent = null;
+      return true;
+    }
+
+    if (this.right !== null && this.right === nodeToRemove) {
+      this.right = null;
+      nodeToRemove.parent = null;
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Attempt to replace a child node with specified replacement
+   * @param nodeToReplace Node to replace
+   * @param replacementNode Node to replace it with
+   * @return true if replacement was succcesful, false otherwise
+   */
+  replaceChild(
+    nodeToReplace: BinarySearchTreeNode<T> | null,
+    replacementNode: BinarySearchTreeNode<T> | null
+  ): boolean {
+    if (nodeToReplace === null || replacementNode === null) {
+      return false;
+    }
+
+    if (this.left !== null && this.left === nodeToReplace) {
+      this.left = replacementNode;
+      replacementNode.parent = this;
+      nodeToReplace.parent = null;
+      return true;
+    }
+
+    if (this.right !== null && this.right === nodeToReplace) {
+      this.right = replacementNode;
+      replacementNode.parent = this;
+      nodeToReplace.parent = null;
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Returns node containing minimum value in the tree
+   * @return Minimum value node
+   */
+  findMin(): BinarySearchTreeNode<T> {
+    if (this.left === null) {
+      return this;
+    }
+
+    return this.left.findMin();
+  }
+
+  /**
+   * Returns node containing maximum value in the tree
+   * @return Maximum value node
+   */
+  findMax(): BinarySearchTreeNode<T> {
+    if (this.right === null) {
+      return this;
+    }
+
+    return this.right.findMax();
+  }
+
+  /**
+   * Returns string representation of the BST
+   * @return string
+   * @override
+   */
+  toString(): string {
+    return [...this.traverseInOrder()].toString();
   }
 }
