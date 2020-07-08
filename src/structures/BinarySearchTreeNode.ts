@@ -134,7 +134,6 @@ export default class BinarySearchTreeNode<T> {
         parent.removeChild(nodeToRemove);
       } else {
         // node has no parent, erase current node value
-        // TODO: data?
         nodeToRemove.setValue(null as any);
         nodeToRemove.setData(null as any);
       }
@@ -145,13 +144,11 @@ export default class BinarySearchTreeNode<T> {
       const nextBiggerNode = nodeToRemove.right.findMin();
       if (nextBiggerNode !== nodeToRemove.right) {
         this.remove(nextBiggerNode.value);
-        // TODO: data?
         nodeToRemove.setValue(nextBiggerNode.value);
         nodeToRemove.setData(nextBiggerNode.data);
       } else {
-        // in case if next right value is next bigger value and it does not have left child
-        // then replace node that is going to be deleted with right node
-        // TODO: data?
+        // if next right value is next bigger value
+        // replace node that is going to be deleted with right node
         nodeToRemove.setValue(nodeToRemove.right.value);
         nodeToRemove.setData(nodeToRemove.right.data);
         nodeToRemove.setRight(nodeToRemove.right.right);
@@ -163,13 +160,13 @@ export default class BinarySearchTreeNode<T> {
 
       if (parent) {
         parent.replaceChild(nodeToRemove, childNode);
+        nodeToRemove.parent = null;
+        nodeToRemove.left = null;
+        nodeToRemove.right = null;
       } else if (childNode !== null) {
         BinarySearchTreeNode.copyNode(childNode, nodeToRemove);
       }
     }
-
-    // clear parent of removed node
-    nodeToRemove.parent = null;
 
     return true;
   }
@@ -242,6 +239,7 @@ export default class BinarySearchTreeNode<T> {
 
   /**
    * Traverses the BST in-order (left, root, right)
+   * Returns sorted values
    * @return Generator of values
    */
   *traverseInOrder(): Generator<number> {

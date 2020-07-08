@@ -212,12 +212,329 @@ describe('BinarySearchTreeNode', () => {
     });
   });
 
-  describe('insert()', () => {});
-  describe('find()', () => {});
-  describe('contains()', () => {});
-  describe('findMin()', () => {});
-  describe('findMax()', () => {});
-  describe('*traverseInOrder()', () => {});
-  describe('toString()', () => {});
-  describe('remove()', () => {});
+  describe('insert()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+    });
+
+    it('inserts node with smaller value to the left', () => {
+      root.insert(5, 'bar');
+
+      expect(root.left).not.toEqual(null);
+      expect(root.left?.parent).toBe(root);
+      expect(root.left?.value).toEqual(5);
+      expect(root.left?.data).toEqual('bar');
+    });
+
+    it('inserts node with smaller value to the left (recursive)', () => {
+      root.insert(5, 'bar');
+      root.insert(3, 'baz');
+
+      expect(root.left).not.toEqual(null);
+      expect(root.left?.parent).toBe(root);
+      expect(root.left?.value).toEqual(5);
+      expect(root.left?.data).toEqual('bar');
+
+      expect(root.left?.left).not.toEqual(null);
+      expect(root.left?.left?.parent).toBe(root.left);
+      expect(root.left?.left?.value).toEqual(3);
+      expect(root.left?.left?.data).toEqual('baz');
+    });
+
+    it('inserts node with larger value to the right', () => {
+      root.insert(15, 'bar');
+
+      expect(root.right).not.toEqual(null);
+      expect(root.right?.parent).toBe(root);
+      expect(root.right?.value).toEqual(15);
+      expect(root.right?.data).toEqual('bar');
+    });
+
+    it('inserts node with larger value to the right (recursive)', () => {
+      root.insert(15, 'bar');
+      root.insert(20, 'baz');
+
+      expect(root.right).not.toEqual(null);
+      expect(root.right?.parent).toBe(root);
+      expect(root.right?.value).toEqual(15);
+      expect(root.right?.data).toEqual('bar');
+
+      expect(root.right?.right).not.toEqual(null);
+      expect(root.right?.right?.parent).toBe(root.right);
+      expect(root.right?.right?.value).toEqual(20);
+      expect(root.right?.right?.data).toEqual('baz');
+    });
+
+    it('returns new node', () => {
+      expect(root.insert(5, 'bar')).toBe(root.left);
+      expect(root.insert(15, 'baz')).toBe(root.right);
+    });
+
+    it('sets node value and data if empty', () => {
+      const emptyNode = new BinarySearchTreeNode<string>(
+        null as any,
+        null as any
+      );
+
+      expect(emptyNode.insert(10, 'foo')).toBe(emptyNode);
+      expect(emptyNode.value).toEqual(10);
+      expect(emptyNode.data).toEqual('foo');
+    });
+
+    it('no-ops for equal values', () => {
+      expect(root.insert(10, 'bar')).toBe(root);
+      expect(root.data).toEqual('foo');
+      expect(root.left).toEqual(null);
+      expect(root.right).toEqual(null);
+    });
+  });
+
+  describe('find()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns node value if matches', () => {
+      expect(root.find(10)).toBe(root);
+    });
+
+    it('searches left subtree for values less than root', () => {
+      expect(root.find(3)).toBe(root.left?.left);
+    });
+
+    it('searches right subtree for values greater than root', () => {
+      expect(root.find(18)).toBe(root.right?.right);
+    });
+
+    it('returns null if no node matches value', () => {
+      expect(root.find(100)).toEqual(null);
+    });
+  });
+
+  describe('contains()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns true if value in tree', () => {
+      expect(root.contains(5)).toEqual(true);
+      expect(root.contains(10)).toEqual(true);
+      expect(root.contains(15)).toEqual(true);
+      expect(root.contains(8)).toEqual(true);
+      expect(root.contains(12)).toEqual(true);
+    });
+
+    it('returns false if value not in tree', () => {
+      expect(root.contains(100)).toEqual(false);
+    });
+  });
+
+  describe('findMin()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns node with min value from the tree', () => {
+      expect(root.findMin().value).toEqual(3);
+    });
+  });
+
+  describe('findMax()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns node with max value from the tree', () => {
+      expect(root.findMax().value).toEqual(18);
+    });
+  });
+
+  describe('*traverseInOrder()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns values in order', () => {
+      expect([...root.traverseInOrder()]).toEqual([3, 5, 8, 10, 12, 15, 18]);
+    });
+  });
+
+  describe('toString()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+    });
+
+    it('returns string representation of tree', () => {
+      expect(root.toString()).toEqual('3,5,8,10,12,15,18');
+    });
+  });
+
+  describe('remove()', () => {
+    let root: BinarySearchTreeNode<string>;
+
+    beforeEach(() => {
+      root = new BinarySearchTreeNode(10, 'foo');
+      root.insert(5, 'bar');
+      root.insert(15, 'baz');
+
+      root.insert(3, 'qux');
+      root.insert(8, 'foobar');
+      root.insert(9, 'foofoobar');
+
+      root.insert(12, 'barbaz');
+      root.insert(18, 'bazqux');
+      root.insert(17, 'barbarbaz');
+    });
+
+    it('returns false if value not found', () => {
+      expect(root.remove(100)).toEqual(false);
+    });
+
+    it('handles removal of leaf nodes', () => {
+      const nodeToRemove = root.find(3);
+
+      expect(root.remove(3)).toEqual(true);
+      expect(root.find(5)?.left).toEqual(null);
+      expect(nodeToRemove?.parent).toEqual(null);
+      expect(nodeToRemove?.left).toEqual(null);
+      expect(nodeToRemove?.right).toEqual(null);
+      expect(root.toString()).toEqual('5,8,9,10,12,15,17,18');
+    });
+
+    it('handles removal of single node tree by leaving empty node', () => {
+      const singleNodeRoot = new BinarySearchTreeNode(10, 'foo');
+
+      expect(singleNodeRoot.remove(10)).toEqual(true);
+      expect(singleNodeRoot.value).toEqual(null);
+      expect(singleNodeRoot.data).toEqual(null);
+    });
+
+    it('handles removal of nodes with one child', () => {
+      const nodeToRemove = root.find(8);
+
+      expect(root.remove(8)).toEqual(true);
+
+      const right = root.find(5)?.right;
+
+      expect(right?.value).toEqual(9);
+      expect(right?.data).toEqual('foofoobar');
+      expect(right?.parent).toBe(root.find(5));
+      expect(nodeToRemove?.parent).toEqual(null);
+      expect(nodeToRemove?.left).toEqual(null);
+      expect(nodeToRemove?.right).toEqual(null);
+      expect(root.toString()).toEqual('3,5,9,10,12,15,17,18');
+    });
+
+    it('handles removal of root with one child by replacing root', () => {
+      const rootWithChild = new BinarySearchTreeNode(10, 'foo');
+      rootWithChild.insert(5, 'bar');
+
+      expect(rootWithChild.remove(10)).toEqual(true);
+      expect(rootWithChild.value).toEqual(5);
+      expect(rootWithChild.data).toEqual('bar');
+      expect(rootWithChild.parent).toEqual(null);
+      expect(rootWithChild.left).toEqual(null);
+      expect(rootWithChild.right).toEqual(null);
+    });
+
+    it('handles removal of node with two children', () => {
+      expect(root.remove(5)).toEqual(true);
+      const movedNode = root.find(8);
+      expect(root.left).toBe(movedNode);
+      expect(movedNode?.parent).toBe(root);
+      expect(movedNode?.left).toBe(root.find(3));
+      expect(movedNode?.right).toBe(root.find(9));
+      expect(movedNode?.data).toEqual('foobar');
+
+      expect(root.toString()).toEqual('3,8,9,10,12,15,17,18');
+    });
+
+    it('handles removal of node with two children where next biggest value is not next right', () => {
+      expect(root.remove(15)).toEqual(true);
+      const movedNode = root.find(17);
+      expect(root.right).toBe(movedNode);
+      expect(movedNode?.parent).toBe(root);
+      expect(movedNode?.left).toBe(root.find(12));
+      expect(movedNode?.right).toBe(root.find(18));
+      expect(movedNode?.data).toEqual('barbarbaz');
+
+      expect(root.toString()).toEqual('3,5,8,9,10,12,17,18');
+    });
+
+    it.skip('handles removal of node with two children where next biggest value is not next right and has a right child', () => {
+      root.insert(17.5, 'test');
+
+      expect(root.remove(15)).toEqual(true);
+      const movedNode = root.find(17);
+      expect(root.right).toBe(movedNode);
+      expect(movedNode?.parent).toBe(root);
+      expect(movedNode?.left).toBe(root.find(12));
+      expect(movedNode?.right).toBe(root.find(17.5));
+      expect(movedNode?.data).toEqual('barbarbaz');
+
+      expect(root.toString()).toEqual('3,5,8,9,10,12,17,17.5,18');
+    });
+  });
 });
