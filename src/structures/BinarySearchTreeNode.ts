@@ -120,6 +120,7 @@ export default class BinarySearchTreeNode<T> {
    */
   remove(value: number): boolean {
     const nodeToRemove = this.find(value);
+    console.log(value);
 
     if (nodeToRemove === null) {
       return false;
@@ -143,9 +144,9 @@ export default class BinarySearchTreeNode<T> {
       // replace current node value with that node value
       const nextBiggerNode = nodeToRemove.right.findMin();
       if (nextBiggerNode !== nodeToRemove.right) {
-        this.remove(nextBiggerNode.value);
         nodeToRemove.setValue(nextBiggerNode.value);
         nodeToRemove.setData(nextBiggerNode.data);
+        nodeToRemove.right.remove(nextBiggerNode.value);
       } else {
         // if next right value is next bigger value
         // replace node that is going to be deleted with right node
@@ -157,6 +158,10 @@ export default class BinarySearchTreeNode<T> {
       // node has one child
       // make this child direct child of current node's parent
       const childNode = nodeToRemove.left || nodeToRemove.right;
+      console.log('one child');
+      console.log(nodeToRemove.value);
+      console.log(childNode?.value);
+      console.log(parent?.value);
 
       if (parent) {
         parent.replaceChild(nodeToRemove, childNode);

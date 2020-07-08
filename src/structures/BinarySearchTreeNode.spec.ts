@@ -453,13 +453,8 @@ describe('BinarySearchTreeNode', () => {
     });
 
     it('handles removal of leaf nodes', () => {
-      const nodeToRemove = root.find(3);
-
       expect(root.remove(3)).toEqual(true);
       expect(root.find(5)?.left).toEqual(null);
-      expect(nodeToRemove?.parent).toEqual(null);
-      expect(nodeToRemove?.left).toEqual(null);
-      expect(nodeToRemove?.right).toEqual(null);
       expect(root.toString()).toEqual('5,8,9,10,12,15,17,18');
     });
 
@@ -472,18 +467,12 @@ describe('BinarySearchTreeNode', () => {
     });
 
     it('handles removal of nodes with one child', () => {
-      const nodeToRemove = root.find(8);
-
       expect(root.remove(8)).toEqual(true);
 
       const right = root.find(5)?.right;
 
       expect(right?.value).toEqual(9);
       expect(right?.data).toEqual('foofoobar');
-      expect(right?.parent).toBe(root.find(5));
-      expect(nodeToRemove?.parent).toEqual(null);
-      expect(nodeToRemove?.left).toEqual(null);
-      expect(nodeToRemove?.right).toEqual(null);
       expect(root.toString()).toEqual('3,5,9,10,12,15,17,18');
     });
 
@@ -494,18 +483,12 @@ describe('BinarySearchTreeNode', () => {
       expect(rootWithChild.remove(10)).toEqual(true);
       expect(rootWithChild.value).toEqual(5);
       expect(rootWithChild.data).toEqual('bar');
-      expect(rootWithChild.parent).toEqual(null);
-      expect(rootWithChild.left).toEqual(null);
-      expect(rootWithChild.right).toEqual(null);
     });
 
     it('handles removal of node with two children', () => {
       expect(root.remove(5)).toEqual(true);
       const movedNode = root.find(8);
       expect(root.left).toBe(movedNode);
-      expect(movedNode?.parent).toBe(root);
-      expect(movedNode?.left).toBe(root.find(3));
-      expect(movedNode?.right).toBe(root.find(9));
       expect(movedNode?.data).toEqual('foobar');
 
       expect(root.toString()).toEqual('3,8,9,10,12,15,17,18');
@@ -515,23 +498,17 @@ describe('BinarySearchTreeNode', () => {
       expect(root.remove(15)).toEqual(true);
       const movedNode = root.find(17);
       expect(root.right).toBe(movedNode);
-      expect(movedNode?.parent).toBe(root);
-      expect(movedNode?.left).toBe(root.find(12));
-      expect(movedNode?.right).toBe(root.find(18));
       expect(movedNode?.data).toEqual('barbarbaz');
 
       expect(root.toString()).toEqual('3,5,8,9,10,12,17,18');
     });
 
-    it.skip('handles removal of node with two children where next biggest value is not next right and has a right child', () => {
+    it('handles removal of node with two children where next biggest value is not next right and has a right child', () => {
       root.insert(17.5, 'test');
 
       expect(root.remove(15)).toEqual(true);
       const movedNode = root.find(17);
       expect(root.right).toBe(movedNode);
-      expect(movedNode?.parent).toBe(root);
-      expect(movedNode?.left).toBe(root.find(12));
-      expect(movedNode?.right).toBe(root.find(17.5));
       expect(movedNode?.data).toEqual('barbarbaz');
 
       expect(root.toString()).toEqual('3,5,8,9,10,12,17,17.5,18');
