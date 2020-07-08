@@ -1,5 +1,15 @@
 import BinarySearchTreeNode from './BinarySearchTreeNode';
 
+/**
+ * @class Binary Search Tree
+ * Complexities
+ * Access - O(log N)
+ * Search - O(log N)
+ * Insertion - O(log N)
+ * Deletion - O(log N)
+ * for balanced trees
+ * degenerate trees degrade to O(N)
+ */
 export default class BinarySearchTree<T> {
   private root: BinarySearchTreeNode<T>;
 

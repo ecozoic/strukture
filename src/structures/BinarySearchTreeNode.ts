@@ -4,10 +4,11 @@ export default class BinarySearchTreeNode<T> {
    * Copy parameters from source node onto target node
    * @param sourceNode Source
    * @param targetNode Target
+   * @static
    */
-  static copyNode(
-    sourceNode: BinarySearchTreeNode<unknown>,
-    targetNode: BinarySearchTreeNode<unknown>
+  static copyNode<T>(
+    sourceNode: BinarySearchTreeNode<T>,
+    targetNode: BinarySearchTreeNode<T>
   ): void {
     targetNode.setData(sourceNode.data);
     targetNode.setValue(sourceNode.value);
