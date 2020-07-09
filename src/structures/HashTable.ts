@@ -1,5 +1,4 @@
 import LinkedList from './LinkedList';
-import LinkedNode from './LinkedNode';
 
 /**
  * @class A hash table with seperate chaining collision

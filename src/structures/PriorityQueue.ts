@@ -1,5 +1,5 @@
 import MinHeap from './MinHeap';
-import Comparator from './ Comparator';
+import Comparator from './Comparator';
 
 /**
  * @class Priority queue implemented via min heap
