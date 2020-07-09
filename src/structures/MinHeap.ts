@@ -2,6 +2,11 @@ import Comparator, { CompareFunction } from './ Comparator';
 
 /**
  * @class A min heap
+ * Complexities:
+ * Peek - O(1)
+ * Poll - O(log N)
+ * Add - O(log N)
+ * Remove - O(log N)
  */
 export default class MinHeap<T> {
   /**
@@ -176,6 +181,179 @@ export default class MinHeap<T> {
     }
 
     return found;
+  }
+
+  /**
+   * Ensures heap property is satisfied after item is added to the heap.
+   * Lifts item in the heap until it's in proper location
+   * @param customStartIndex Optional index to use instead of last item in array
+   * @private
+   */
+  private heapifyUp(customStartIndex?: number): void {
+    // take last element (last in array, bottom left of tree)
+    // lift it up until its in correct spot
+    let currentIndex = customStartIndex || this.heap.length - 1;
+
+    while (
+      this.hasParent(currentIndex) &&
+      this.compare.greaterThan(
+        this.parent(currentIndex),
+        this.heap[currentIndex]
+      )
+    ) {
+      const parentIndex = this.getParentIndex(currentIndex);
+      this.swap(currentIndex, parentIndex);
+      currentIndex = parentIndex;
+    }
+  }
+
+  /**
+   * Ensures heap property is satisfied after root is polled out.
+   * Lowers item in the heap until it's in proper location.
+   * @param customStartIndex Optional index to use instead of beginning of array
+   * @private
+   */
+  private heapifyDown(customStartIndex = 0): void {
+    // compare parent to its children and swap parent with appropriate child
+    let currentIndex = customStartIndex;
+    let nextIndex = null;
+
+    while (this.hasLeftChild(currentIndex)) {
+      if (
+        this.hasRightChild(currentIndex) &&
+        this.compare.lessThanOrEqual(
+          this.rightChild(currentIndex),
+          this.leftChild(currentIndex)
+        )
+      ) {
+        nextIndex = this.getRightChildIndex(currentIndex);
+      } else {
+        nextIndex = this.getLeftChildIndex(currentIndex);
+      }
+
+      if (
+        this.compare.lessThanOrEqual(
+          this.heap[currentIndex],
+          this.heap[nextIndex]
+        )
+      ) {
+        break;
+      }
+
+      this.swap(currentIndex, nextIndex);
+      currentIndex = nextIndex;
+    }
+  }
+
+  /**
+   * Return head of the heap without removing it
+   * @return First item or null if heap is empty
+   */
+  peek(): T | null {
+    if (this.isEmpty()) {
+      return null;
+    }
+
+    return this.heap[0];
+  }
+
+  /**
+   * Remove and return head of the heap
+   * @return First item or null if heap is empty
+   */
+  poll(): T | null {
+    if (this.isEmpty()) {
+      return null;
+    }
+
+    if (this.heap.length === 1) {
+      // if heap is just one element, extract it
+      const element = this.heap.pop();
+
+      if (element !== undefined) {
+        this.map.delete(element);
+        return element;
+      }
+
+      return null;
+    }
+
+    const item = this.heap[0];
+
+    // move last item in array to head to preserve shape property
+    const lastItem = this.heap.pop();
+    if (lastItem !== undefined) {
+      this.heap[0] = lastItem;
+    }
+
+    // heapify down to preserve heap property
+    this.heapifyDown();
+
+    return item;
+  }
+
+  /**
+   * Add a new item to the heap
+   * @return this
+   */
+  add(item: T): this {
+    // add new item to end of heap (shape property is preserved)
+    this.heap.push(item);
+
+    // add current item to map for fast access
+    this.map.set(item, item);
+
+    // preserve heap property by moving element up if necessary
+    this.heapifyUp();
+
+    return this;
+  }
+
+  /**
+   * Remove items from the heap
+   * @param item Item to remove
+   * @param comparator Comparator to use for comparison logic
+   * @return this
+   */
+  remove(item: T, comparator = this.compare): this {
+    // find number of items to remove
+    const numberToRemove = this.find(item, comparator).length;
+
+    this.map.delete(item);
+
+    for (let iteration = 0; iteration < numberToRemove; iteration++) {
+      // we need to find index to remove each iteration because
+      // indices will change after heapify process
+      const indexToRemove = this.find(item, comparator).pop();
+
+      // if we need to remove last child in heap, just remove, no need to heapify
+      if (indexToRemove === this.heap.length - 1) {
+        this.heap.pop();
+      } else if (indexToRemove !== undefined) {
+        // move last element in heap to vacant position
+        const lastElement = this.heap.pop();
+        if (lastElement !== undefined) {
+          this.heap[indexToRemove] = lastElement;
+        }
+
+        // get parent
+        const parent = this.parent(indexToRemove);
+
+        // if there is no parent or parent is in correct order, heapify down
+        // otherwise heapify up
+        if (
+          this.hasLeftChild(indexToRemove) &&
+          (parent === null ||
+            this.compare.lessThanOrEqual(parent, this.heap[indexToRemove]))
+        ) {
+          this.heapifyDown(indexToRemove);
+        } else {
+          this.heapifyUp(indexToRemove);
+        }
+      }
+    }
+
+    return this;
   }
 
   /**
