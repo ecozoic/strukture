@@ -1,4 +1,4 @@
-import Comparator, { CompareFunction } from './ Comparator';
+import Comparator, { CompareFunction } from './Comparator';
 
 /**
  * @class A min heap
