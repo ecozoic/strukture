@@ -21,7 +21,7 @@ export default class MinHeap<T> {
    * @member
    * @private
    */
-  private compare: Comparator<T>;
+  protected compare: Comparator<T>;
 
   /**
    * Map of heap elements for fast look-up
@@ -35,7 +35,7 @@ export default class MinHeap<T> {
    * @param compare Compare function
    * @constructor
    */
-  constructor(compare: CompareFunction<T>) {
+  constructor(compare?: CompareFunction<T>) {
     this.heap = [];
     this.map = new Map<T, T>();
     this.compare = new Comparator<T>(compare);

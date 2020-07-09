@@ -29,7 +29,7 @@ export default class Comparator<T> {
    * @param compare Compare function to use for comparisons
    * @constructor
    */
-  constructor(compare: CompareFunction<T>) {
+  constructor(compare?: CompareFunction<T>) {
     this.compare = compare || Comparator.defaultCompareFunction;
   }
 
