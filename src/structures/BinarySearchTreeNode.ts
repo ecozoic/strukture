@@ -121,7 +121,6 @@ export default class BinarySearchTreeNode<T> {
    */
   remove(value: number): boolean {
     const nodeToRemove = this.find(value);
-    console.log(value);
 
     if (nodeToRemove === null) {
       return false;
@@ -159,10 +158,6 @@ export default class BinarySearchTreeNode<T> {
       // node has one child
       // make this child direct child of current node's parent
       const childNode = nodeToRemove.left || nodeToRemove.right;
-      console.log('one child');
-      console.log(nodeToRemove.value);
-      console.log(childNode?.value);
-      console.log(parent?.value);
 
       if (parent) {
         parent.replaceChild(nodeToRemove, childNode);
