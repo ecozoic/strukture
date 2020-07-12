@@ -1,3 +1,5 @@
+// https://leetcode.com/problems/add-binary/
+
 export function addBinaryString(a: string, b: string): string {
   // same as add string but in base 2 instead of base 10
   let carry = 0;
