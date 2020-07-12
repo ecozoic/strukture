@@ -7,5 +7,18 @@ export function peakIndexLinear(A: Array<number>): number {
 }
 
 export function peakIndexBinary(A: Array<number>): number {
-  return 0;
+  let startIndex = 0;
+  let endIndex = A.length - 1;
+
+  while (startIndex < endIndex) {
+    const middleIndex = startIndex + Math.floor((endIndex - startIndex) / 2);
+
+    if (A[middleIndex] < A[middleIndex + 1]) {
+      startIndex = middleIndex + 1;
+    } else {
+      endIndex = middleIndex;
+    }
+  }
+
+  return startIndex;
 }

@@ -1,4 +1,4 @@
-import { linearSearch } from './search';
+import { linearSearch, binarySearch } from './search';
 
 describe('linearSearch', () => {
   it('returns indices of matching items', () => {
@@ -14,5 +14,29 @@ describe('linearSearch', () => {
     });
 
     expect(indices).toEqual([2]);
+  });
+});
+
+describe('binarySearch', () => {
+  it('returns index of matching item', () => {
+    type Star = { name: string };
+    const items: Array<Star> = [
+      { name: 'Alpha Centauri A' },
+      { name: 'Alpha Centauri B' },
+      { name: 'Betelgeuse' },
+      { name: 'Polaris' },
+      { name: 'Rigel' },
+      { name: 'Sirius' },
+    ];
+
+    const index = binarySearch<Star>(items, { name: 'Rigel' }, (a, b) => {
+      if (a.name === b.name) {
+        return 0;
+      }
+
+      return a.name < b.name ? -1 : 1;
+    });
+
+    expect(index).toEqual(4);
   });
 });
