@@ -17,7 +17,7 @@ export default function threeSum(
   });
 
   // b/c array is sorted & we are checking ltr
-  // no need to further iterate if nums[i] > 0 b/c no way a sum can be negative from there
+  // no need to further iterate if nums[i] > 0 b/c no way a sum can be zero from there
   for (let i = 0; i < nums.length && nums[i] <= 0; i++) {
     // don't check duplicates (looking for unique triplets), repeating values are next to each other b/c sorted
     if (i === 0 || nums[i] !== nums[i - 1]) {
