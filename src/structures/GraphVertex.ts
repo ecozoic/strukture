@@ -40,7 +40,7 @@ export default class GraphVertex<T> {
     return edges.map<EdgedVertex<T>>((node) => {
       const edge = node.value;
       const neighbor =
-        edge.startVertex === this ? edge.startVertex : edge.endVertex;
+        edge.startVertex === this ? edge.endVertex : edge.startVertex;
 
       (neighbor as EdgedVertex<T>).edge = edge;
 
