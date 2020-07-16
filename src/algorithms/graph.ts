@@ -3,6 +3,8 @@ import GraphVertex from '../structures/GraphVertex';
 
 export type VertexCallback<T> = (vertex: GraphVertex<T>) => void;
 
+// Time - O(|V| + O|E|)
+// Space - O(|V|)
 export function depthFirstSearch<T>(
   graph: Graph<T>,
   startVertex: GraphVertex<T>,
@@ -48,5 +50,31 @@ export function depthFirstSearchStack<T>(
         stack.push(nextVertex);
       }
     }
+  }
+}
+
+// Time - O(|V| + |E|)
+// Space - O(|V|)
+export function breadthFirstSearch<T>(
+  graph: Graph<T>,
+  startVertex: GraphVertex<T>,
+  enterVertexCallback: VertexCallback<T>
+): void {
+  const queue: Array<GraphVertex<T>> = [startVertex];
+  const visited = new Map<T, boolean>();
+  visited.set(startVertex.getKey(), true);
+
+  while (queue.length !== 0) {
+    const currentVertex = queue.shift() as GraphVertex<T>;
+
+    enterVertexCallback(currentVertex);
+
+    currentVertex.getNeighbors().forEach((nextVertex) => {
+      if (!visited.has(nextVertex.getKey())) {
+        visited.set(nextVertex.getKey(), true);
+
+        queue.push(nextVertex);
+      }
+    });
   }
 }
