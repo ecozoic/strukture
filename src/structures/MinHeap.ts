@@ -85,9 +85,8 @@ export default class MinHeap<T> {
    * Check whether or not item exists in heap
    * @param item Item to look for
    * @return true if item exists in heap, false otherwise
-   * @private
    */
-  private has(item: T): boolean {
+  has(item: T): boolean {
     return this.map.get(item) !== undefined;
   }
 

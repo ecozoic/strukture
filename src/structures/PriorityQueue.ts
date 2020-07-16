@@ -46,4 +46,8 @@ export default class PriorityQueue<T> extends MinHeap<T> {
     this.add(item, priority);
     return this;
   }
+
+  has(item: T): boolean {
+    return super.has(item);
+  }
 }

@@ -6,6 +6,7 @@ import {
   depthFirstSearchStack,
   breadthFirstSearch,
   VertexCallback,
+  dijkstra,
 } from './graph';
 
 describe('depthFirstSearch', () => {
@@ -165,5 +166,52 @@ describe('breadthFirstSearch', () => {
       'Tom',
       'Sam',
     ]);
+  });
+});
+
+describe('dijkstra', () => {
+  let graph: Graph<string>;
+  let home: GraphVertex<string>;
+
+  beforeEach(() => {
+    graph = new Graph<string>();
+
+    home = new GraphVertex('Home');
+    const spotA = new GraphVertex('A');
+    const spotB = new GraphVertex('B');
+    const spotC = new GraphVertex('C');
+    const spotD = new GraphVertex('D');
+    const spotE = new GraphVertex('E');
+    const spotOffice = new GraphVertex('Office');
+
+    const roadHomeA = new GraphEdge(home, spotA, 5);
+    const roadHomeD = new GraphEdge(home, spotD, 8);
+    const roadAB = new GraphEdge(spotA, spotB, 9);
+    const roadAC = new GraphEdge(spotA, spotC, 3);
+    const roadCB = new GraphEdge(spotC, spotB, 5);
+    const roadDC = new GraphEdge(spotD, spotC, 4);
+    const roadCE = new GraphEdge(spotC, spotE, 2);
+    const roadDE = new GraphEdge(spotD, spotE, 6);
+    const roadOfficeB = new GraphEdge(spotOffice, spotB, 7);
+    const roadOfficeE = new GraphEdge(spotOffice, spotE, 4);
+
+    graph
+      .addEdge(roadHomeA)
+      .addEdge(roadHomeD)
+      .addEdge(roadAB)
+      .addEdge(roadAC)
+      .addEdge(roadCB)
+      .addEdge(roadDC)
+      .addEdge(roadCE)
+      .addEdge(roadDE)
+      .addEdge(roadOfficeB)
+      .addEdge(roadOfficeE);
+  });
+
+  it('works', () => {
+    const { distances, previousVertices } = dijkstra(graph, home);
+
+    console.log(distances);
+    console.log(previousVertices);
   });
 });
