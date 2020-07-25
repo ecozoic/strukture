@@ -1,6 +1,7 @@
 import Graph from '../structures/Graph';
 import GraphVertex from '../structures/GraphVertex';
 import PriorityQueue from '../structures/PriorityQueue';
+import Queue from '../structures/Queue';
 
 export type VertexCallback<T> = (vertex: GraphVertex<T>) => void;
 
@@ -151,4 +152,50 @@ export function dijkstra<T>(
   }
 
   return { distances, previousVertices };
+}
+
+export function topologicalSort<T>(graph: Graph<T>): Array<T> {
+  const sortedOrder: Array<T> = [];
+  const inDegrees = new Map<GraphVertex<T>, number>();
+
+  const vertices = graph.getAllVertices();
+  const edges = graph.getAllEdges();
+
+  vertices.forEach((vertex) => {
+    inDegrees.set(vertex, 0);
+  });
+
+  edges.forEach((edge) => {
+    inDegrees.set(
+      edge.endVertex,
+      (inDegrees.get(edge.endVertex) as number) + 1
+    );
+  });
+
+  const sources = new Queue<GraphVertex<T>>();
+
+  for (const [vertex, inDegree] of inDegrees) {
+    if (inDegree === 0) {
+      sources.enqueue(vertex);
+    }
+  }
+
+  while (!sources.isEmpty()) {
+    const vertex = sources.dequeue() as GraphVertex<T>;
+    sortedOrder.push(vertex.value);
+
+    vertex.getNeighbors().forEach((neighbor) => {
+      inDegrees.set(neighbor, (inDegrees.get(neighbor) as number) - 1);
+
+      if (inDegrees.get(neighbor) === 0) {
+        sources.enqueue(neighbor);
+      }
+    });
+  }
+
+  if (sortedOrder.length < vertices.length) {
+    return []; // cycle
+  }
+
+  return sortedOrder;
 }

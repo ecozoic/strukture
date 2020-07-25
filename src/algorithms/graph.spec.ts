@@ -7,6 +7,7 @@ import {
   breadthFirstSearch,
   VertexCallback,
   dijkstra,
+  topologicalSort,
 } from './graph';
 
 describe('depthFirstSearch', () => {
@@ -213,5 +214,31 @@ describe('dijkstra', () => {
 
     console.log(distances);
     console.log(previousVertices);
+  });
+});
+
+describe('topologicalSort', () => {
+  // 5
+  it('works', () => {
+    const five = new GraphVertex(5);
+    const six = new GraphVertex(6);
+    const three = new GraphVertex(3);
+    const four = new GraphVertex(4);
+    const zero = new GraphVertex(0);
+    const one = new GraphVertex(1);
+    const two = new GraphVertex(2);
+
+    const graph = new Graph<number>(true);
+    graph
+      .addEdge(new GraphEdge(five, three))
+      .addEdge(new GraphEdge(five, four))
+      .addEdge(new GraphEdge(six, four))
+      .addEdge(new GraphEdge(six, two))
+      .addEdge(new GraphEdge(three, zero))
+      .addEdge(new GraphEdge(three, one))
+      .addEdge(new GraphEdge(three, two))
+      .addEdge(new GraphEdge(four, one));
+
+    console.log(topologicalSort(graph));
   });
 });
