@@ -1,7 +1,7 @@
-import LinkedNode from './LinkedNode';
+import DoublyLinkedNode from './DoublyLinkedNode';
 
 /**
- * @class Singly-linked list
+ * @class Doubly-linked list
  * Complexities:
  * Access - O(n)
  * Search - O(n)
@@ -13,13 +13,13 @@ export default class LinkedList<T> {
    * Pointer to start of list
    * @member
    */
-  public head: LinkedNode<T> | null;
+  public head: DoublyLinkedNode<T> | null;
 
   /**
    * Pointer to end of list
    * @member
    */
-  public tail: LinkedNode<T> | null;
+  public tail: DoublyLinkedNode<T> | null;
 
   /**
    * Creates a new linked list
@@ -36,10 +36,14 @@ export default class LinkedList<T> {
    * @return List
    */
   prepend(value: T): LinkedList<T> {
-    const newNode = new LinkedNode<T>(value, this.head);
+    const newNode = new DoublyLinkedNode<T>(value, this.head);
 
     if (!this.tail) {
       this.tail = newNode;
+    }
+
+    if (this.head) {
+      this.head.prev = newNode;
     }
 
     this.head = newNode;
@@ -53,7 +57,7 @@ export default class LinkedList<T> {
    * @return List
    */
   append(value: T): LinkedList<T> {
-    const newNode = new LinkedNode<T>(value);
+    const newNode = new DoublyLinkedNode<T>(value);
 
     if (!this.head || !this.tail) {
       this.head = newNode;
@@ -61,6 +65,7 @@ export default class LinkedList<T> {
     } else {
       const currentTail = this.tail;
       currentTail.next = newNode;
+      newNode.prev = currentTail;
       this.tail = newNode;
     }
 
@@ -71,7 +76,7 @@ export default class LinkedList<T> {
    * Remove head of the list
    * @return Deleted node or null if list is empty
    */
-  deleteHead(): LinkedNode<T> | null {
+  deleteHead(): DoublyLinkedNode<T> | null {
     if (!this.head) {
       return null;
     }
@@ -80,6 +85,7 @@ export default class LinkedList<T> {
 
     if (this.head.next) {
       this.head = this.head.next;
+      this.head.prev = null;
     } else {
       this.head = null;
       this.tail = null;
@@ -92,7 +98,7 @@ export default class LinkedList<T> {
    * Remove tail of the list
    * @return Deleted node or null if list is empty
    */
-  deleteTail(): LinkedNode<T> | null {
+  deleteTail(): DoublyLinkedNode<T> | null {
     if (!this.head || !this.tail) {
       return null;
     }
@@ -103,17 +109,8 @@ export default class LinkedList<T> {
       this.head = null;
       this.tail = null;
     } else {
-      let currentNode = this.head;
-
-      while (currentNode.next !== null) {
-        if (currentNode.next.next === null) {
-          currentNode.next = null;
-        } else {
-          currentNode = currentNode.next;
-        }
-      }
-
-      this.tail = currentNode;
+      this.tail = deletedTail.prev as DoublyLinkedNode<T>;
+      this.tail.next = null;
     }
 
     return deletedTail;
@@ -124,12 +121,12 @@ export default class LinkedList<T> {
    * @param value Value to delete
    * @return Deleted node or null value is not found or list is empty
    */
-  delete(value: T): LinkedNode<T> | null {
+  delete(value: T): DoublyLinkedNode<T> | null {
     if (!this.head || !this.tail) {
       return null;
     }
 
-    let deletedNode: LinkedNode<T> | null = null;
+    let deletedNode: DoublyLinkedNode<T> | null = null;
 
     if (this.head.value === value) {
       return this.deleteHead();
@@ -137,12 +134,19 @@ export default class LinkedList<T> {
       return this.deleteTail();
     }
 
-    let currentNode: LinkedNode<T> | null = this.head;
+    let currentNode: DoublyLinkedNode<T> | null = this.head;
 
-    while (currentNode !== null && currentNode.next !== null) {
-      if (currentNode.next.value === value) {
-        deletedNode = currentNode.next;
-        currentNode.next = currentNode.next.next;
+    while (currentNode !== null) {
+      if (currentNode.value === value) {
+        deletedNode = currentNode;
+
+        if (deletedNode.prev) {
+          deletedNode.prev.next = deletedNode.next;
+        }
+
+        if (deletedNode.next) {
+          deletedNode.next.prev = deletedNode.prev;
+        }
 
         break;
       } else {
@@ -166,13 +170,13 @@ export default class LinkedList<T> {
   }: {
     value?: T;
     callback?: (value: T) => boolean;
-  }): LinkedNode<T> | null {
+  }): DoublyLinkedNode<T> | null {
     if (!this.head) {
       return null;
     }
 
-    let foundNode: LinkedNode<T> | null = null;
-    let currentNode: LinkedNode<T> | null = this.head;
+    let foundNode: DoublyLinkedNode<T> | null = null;
+    let currentNode: DoublyLinkedNode<T> | null = this.head;
 
     while (currentNode) {
       if (callback !== undefined && callback(currentNode.value)) {
@@ -193,8 +197,8 @@ export default class LinkedList<T> {
    * Converts list into an array
    * @return array of nodes
    */
-  toArray(): Array<LinkedNode<T>> {
-    const nodes: Array<LinkedNode<T>> = [];
+  toArray(): Array<DoublyLinkedNode<T>> {
+    const nodes: Array<DoublyLinkedNode<T>> = [];
 
     let currentNode = this.head;
 
@@ -222,7 +226,7 @@ export default class LinkedList<T> {
    * Iterator
    * @override
    */
-  *[Symbol.iterator](): Generator<LinkedNode<T>> {
+  *[Symbol.iterator](): Generator<DoublyLinkedNode<T>> {
     let currentNode = this.head;
     while (currentNode !== null) {
       yield currentNode;
