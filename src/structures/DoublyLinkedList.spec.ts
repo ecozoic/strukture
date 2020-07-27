@@ -13,14 +13,14 @@ describe('DoublyLinkedList', () => {
   });
 
   it('is iterable', () => {
-    list.append('foo').append('bar').append('baz');
+    list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
     expect([...list].map((node) => node.value)).toEqual(['foo', 'bar', 'baz']);
   });
 
   describe('prepend()', () => {
     it('adds item to beginning of list', () => {
-      list.prepend('foo');
+      list.prepend('k1', 'foo');
 
       expect(list.head?.value).toEqual('foo');
       expect(list.tail?.value).toEqual('foo');
@@ -30,7 +30,7 @@ describe('DoublyLinkedList', () => {
       expect(list.tail?.prev).toEqual(null);
       expect(list.tail?.next).toEqual(null);
 
-      list.prepend('bar');
+      list.prepend('k2', 'bar');
 
       expect(list.head?.value).toEqual('bar');
       expect(list.tail?.value).toEqual('foo');
@@ -40,7 +40,7 @@ describe('DoublyLinkedList', () => {
       expect(list.tail?.next).toEqual(null);
       expect(list.tail?.prev?.value).toEqual('bar');
 
-      list.prepend('baz');
+      list.prepend('k3', 'baz');
 
       expect(list.head?.value).toEqual('baz');
       expect(list.tail?.value).toEqual('foo');
@@ -58,7 +58,7 @@ describe('DoublyLinkedList', () => {
 
   describe('append()', () => {
     it('adds item to end of list', () => {
-      list.append('foo');
+      list.append('k1', 'foo');
 
       expect(list.head?.value).toEqual('foo');
       expect(list.tail?.value).toEqual('foo');
@@ -68,7 +68,7 @@ describe('DoublyLinkedList', () => {
       expect(list.tail?.prev).toEqual(null);
       expect(list.tail?.next).toEqual(null);
 
-      list.append('bar');
+      list.append('k2', 'bar');
 
       expect(list.head?.value).toEqual('foo');
       expect(list.tail?.value).toEqual('bar');
@@ -78,7 +78,7 @@ describe('DoublyLinkedList', () => {
       expect(list.tail?.next).toEqual(null);
       expect(list.tail?.prev?.value).toEqual('foo');
 
-      list.append('baz');
+      list.append('k3', 'baz');
 
       expect(list.head?.value).toEqual('foo');
       expect(list.tail?.value).toEqual('baz');
@@ -100,7 +100,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('deletes head', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.deleteHead()?.value).toEqual('foo');
       expect(list.head?.value).toEqual('bar');
@@ -109,7 +109,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('empties single-item list', () => {
-      list.append('foo');
+      list.append('k1', 'foo');
       expect(list.deleteHead()?.value).toEqual('foo');
       expect(list.head).toEqual(null);
       expect(list.tail).toEqual(null);
@@ -122,7 +122,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('deletes tail', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.deleteTail()?.value).toEqual('baz');
       expect(list.tail?.value).toEqual('bar');
@@ -131,7 +131,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('empties single-item list', () => {
-      list.append('foo');
+      list.append('k1', 'foo');
 
       expect(list.deleteTail()?.value).toEqual('foo');
       expect(list.head).toEqual(null);
@@ -145,7 +145,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('empties single-item list', () => {
-      list.append('foo');
+      list.append('k1', 'foo');
 
       expect(list.delete('foo')?.value).toEqual('foo');
       expect(list.head).toEqual(null);
@@ -153,7 +153,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('deletes head', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.delete('foo')?.value).toEqual('foo');
       expect(list.head?.value).toEqual('bar');
@@ -161,7 +161,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('deletes tail', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.delete('baz')?.value).toEqual('baz');
       expect(list.head?.value).toEqual('foo');
@@ -169,7 +169,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('deletes item from list', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.delete('bar')?.value).toEqual('bar');
       expect(list.head?.value).toEqual('foo');
@@ -188,13 +188,13 @@ describe('DoublyLinkedList', () => {
     });
 
     it('returns null if not found', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.find({ value: 'qux' })).toEqual(null);
     });
 
     it('returns found node by value', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.find({ value: 'foo' })?.value).toEqual('foo');
       expect(list.find({ value: 'bar' })?.value).toEqual('bar');
@@ -202,7 +202,7 @@ describe('DoublyLinkedList', () => {
     });
 
     it('returns found node by callback', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(
         list.find({ callback: (value) => value === 'foo' })?.value
@@ -212,7 +212,7 @@ describe('DoublyLinkedList', () => {
 
   describe('toArray()', () => {
     it('converts list to array', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.toArray().map((node) => node.value)).toEqual([
         'foo',
@@ -224,13 +224,13 @@ describe('DoublyLinkedList', () => {
 
   describe('toString()', () => {
     it('returns string', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
 
       expect(list.toString()).toEqual('foo,bar,baz');
     });
 
     it('allows optional callback override', () => {
-      list.append('foo').append('bar').append('baz');
+      list.append('k1', 'foo').append('k2', 'bar').append('k3', 'baz');
       const callback = (value: string) => `Node:${value}`;
 
       expect(list.toString(callback)).toEqual(

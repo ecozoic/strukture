@@ -35,8 +35,8 @@ export default class LinkedList<T> {
    * @param value Value to add
    * @return List
    */
-  prepend(value: T): LinkedList<T> {
-    const newNode = new DoublyLinkedNode<T>(value, this.head);
+  prepend(key: string, value: T): LinkedList<T> {
+    const newNode = new DoublyLinkedNode<T>(key, value, this.head);
 
     if (!this.tail) {
       this.tail = newNode;
@@ -56,8 +56,8 @@ export default class LinkedList<T> {
    * @param value Value to add
    * @return List
    */
-  append(value: T): LinkedList<T> {
-    const newNode = new DoublyLinkedNode<T>(value);
+  append(key: string, value: T): LinkedList<T> {
+    const newNode = new DoublyLinkedNode<T>(key, value);
 
     if (!this.head || !this.tail) {
       this.head = newNode;
@@ -231,6 +231,16 @@ export default class LinkedList<T> {
     while (currentNode !== null) {
       yield currentNode;
       currentNode = currentNode.next;
+    }
+  }
+
+  remove(node: DoublyLinkedNode<T>): void {
+    if (node.prev) {
+      node.prev.next = node.next;
+    }
+
+    if (node.next) {
+      node.next.prev = node.prev;
     }
   }
 }

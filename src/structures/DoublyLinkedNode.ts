@@ -8,6 +8,7 @@ export default class DoublyLinkedNode<T> {
 
   /**
    * Pointer to previous node
+   * @member
    */
   public prev: DoublyLinkedNode<T> | null;
 
@@ -18,16 +19,24 @@ export default class DoublyLinkedNode<T> {
   public value: T;
 
   /**
+   * Key for node
+   * @member
+   */
+  public key: string;
+
+  /**
    * Creates a new linked node
    * @constructor
    * @param value Value to store
    * @param next Pointer to next node in list
    */
   constructor(
+    key: string,
     value: T,
     next: DoublyLinkedNode<T> | null = null,
     prev: DoublyLinkedNode<T> | null = null
   ) {
+    this.key = key;
     this.value = value;
     this.next = next;
     this.prev = prev;
