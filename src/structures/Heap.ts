@@ -1,14 +1,14 @@
 import Comparator, { CompareFunction } from './Comparator';
 
 /**
- * @class A min heap
+ * @class A binary heap
  * Complexities:
  * Peek - O(1)
  * Poll - O(log N)
  * Add - O(log N)
  * Remove - O(log N)
  */
-export default class MinHeap<T> {
+export default class Heap<T> {
   /**
    * Array representation of heap
    * @member
@@ -146,10 +146,19 @@ export default class MinHeap<T> {
    * @param indexTwo Second index
    * @private
    */
-  private swap(indexOne: number, indexTwo: number): void {
-    const tmp = this.heap[indexTwo];
-    this.heap[indexTwo] = this.heap[indexOne];
-    this.heap[indexOne] = tmp;
+  private swap(index1: number, index2: number): void {
+    [this.heap[index1], this.heap[index2]] = [
+      this.heap[index2],
+      this.heap[index1],
+    ];
+  }
+
+  /**
+   * Get current size of heap
+   * @return Size
+   */
+  get size(): number {
+    return this.heap.length;
   }
 
   /**
@@ -195,10 +204,7 @@ export default class MinHeap<T> {
 
     while (
       this.hasParent(currentIndex) &&
-      this.compare.greaterThan(
-        this.parent(currentIndex),
-        this.heap[currentIndex]
-      )
+      this.compare.lessThan(this.parent(currentIndex), this.heap[currentIndex])
     ) {
       const parentIndex = this.getParentIndex(currentIndex);
       this.swap(currentIndex, parentIndex);
@@ -220,7 +226,7 @@ export default class MinHeap<T> {
     while (this.hasLeftChild(currentIndex)) {
       if (
         this.hasRightChild(currentIndex) &&
-        this.compare.lessThanOrEqual(
+        this.compare.greaterThanOrEqual(
           this.rightChild(currentIndex),
           this.leftChild(currentIndex)
         )
@@ -231,7 +237,7 @@ export default class MinHeap<T> {
       }
 
       if (
-        this.compare.lessThanOrEqual(
+        this.compare.greaterThanOrEqual(
           this.heap[currentIndex],
           this.heap[nextIndex]
         )
@@ -343,7 +349,7 @@ export default class MinHeap<T> {
         if (
           this.hasLeftChild(indexToRemove) &&
           (parent === null ||
-            this.compare.lessThanOrEqual(parent, this.heap[indexToRemove]))
+            this.compare.greaterThanOrEqual(parent, this.heap[indexToRemove]))
         ) {
           this.heapifyDown(indexToRemove);
         } else {

@@ -1,10 +1,10 @@
-import MinHeap from './MinHeap';
+import Heap from './Heap';
 import Comparator from './Comparator';
 
 /**
  * @class Priority queue implemented via min heap
  */
-export default class PriorityQueue<T> extends MinHeap<T> {
+export default class PriorityQueue<T> extends Heap<T> {
   private priorities: Map<T, number>;
 
   constructor() {
@@ -26,7 +26,7 @@ export default class PriorityQueue<T> extends MinHeap<T> {
       return 0;
     }
 
-    return priorityA < priorityB ? -1 : 1;
+    return priorityA < priorityB ? 1 : -1;
   }
 
   add(item: T, priority = 0): this {
