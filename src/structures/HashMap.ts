@@ -7,7 +7,7 @@ import LinkedList from './LinkedList';
  * Insertion - O(1), O(n) worst case
  * Deletion - O(1), O(n) worst case
  */
-export default class HashTable<T> {
+export default class HashMap<T> {
   /**
    * Buckets to store values
    * @member

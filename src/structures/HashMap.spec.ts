@@ -1,10 +1,10 @@
-import HashTable from './HashTable';
+import HashMap from './HashMap';
 
-describe('HashTable', () => {
-  let table: HashTable<string>;
+describe('HashMap', () => {
+  let table: HashMap<string>;
 
   beforeEach(() => {
-    table = new HashTable<string>();
+    table = new HashMap<string>();
   });
 
   describe('get()', () => {

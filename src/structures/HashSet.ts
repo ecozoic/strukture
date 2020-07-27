@@ -1,5 +1,4 @@
-// https://leetcode.com/problems/design-hashset/
-import LinkedList from '../structures/LinkedList';
+import LinkedList from './LinkedList';
 
 export default class HashSet {
   private keyRange: number;
